@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+   db_client:
+     image: mysql:8.0
+     ports:
+       - "3306:3306"
+     command: --default-authentication-plugin=mysql_native_password
+     environment:
+       MYSQL_USER: admin
+       MYSQL_PASSWORD: root
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: clientdb
+     volumes:
+       - ./Scripts:/docker-entrypoint-initdb.d
+
+   db_product:
+     image: mysql:8.0
+     ports:
+       - "3307:3306"
+     command: --default-authentication-plugin=mysql_native_password
+     environment:
+       MYSQL_USER: admin
+       MYSQL_PASSWORD: root
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: productdb
+     volumes:
+       - ./Scripts:/docker-entrypoint-initdb.d
+
+  
+   adminer:
+     image: adminer:latest
+     container_name: adminer
+     restart: always
+     ports:
+       - "8080:8080"
+     depends_on:
+       - db_client
+       - db_product
+
+   redis:
+     image: redis
+     ports:
+       - "6379:6379"
+
+   client:
+    build:
+      context: .
+      dockerfile: Client/Dockerfile 
+    ports: 
+      - "9292:9292"
+    depends_on: 
+      - db_client
+
+
+
