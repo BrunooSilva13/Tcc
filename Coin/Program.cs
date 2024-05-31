@@ -28,23 +28,7 @@ namespace coin
 
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "client",
-                    Version = "v1",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "bruno",
-                        Email = "brunomendes.2259@gmail.com",
-                        Url = new Uri("https://github.com/BrunooSilva13")
-                    }
-                });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
+            builder.Services.AddSwaggerGen();
 
             builder.Services.AddControllers();
             builder.Services.AddRefitClient<IEconomy>()
