@@ -63,7 +63,7 @@ class Program
 
         app.UseRouting();
         app.MapControllers();
-        app.Run($"http://0.0.0.0:9292");
+        app.Run();
     }
 
 }

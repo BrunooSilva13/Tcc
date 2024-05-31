@@ -27,7 +27,6 @@ services:
      volumes:
        - ./Scripts:/docker-entrypoint-initdb.d
 
-  
    adminer:
      image: adminer:latest
      container_name: adminer
@@ -43,14 +42,4 @@ services:
      ports:
        - "6379:6379"
 
-   client:
-    build:
-      context: .
-      dockerfile: Client/Dockerfile 
-    ports: 
-      - "9292:9292"
-    depends_on: 
-      - db_client
-
-
-
+   
