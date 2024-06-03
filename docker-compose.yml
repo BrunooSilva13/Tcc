@@ -42,4 +42,19 @@ services:
      ports:
        - "6379:6379"
 
-   
+   client:
+    build: ./Client  
+    ports: 
+      - "8084:8080"
+    depends_on: 
+      - db_client
+
+   product:
+    build: ./Product 
+    ports: 
+      - "8083:8080"
+    depends_on: 
+      - db_product
+
+
+
