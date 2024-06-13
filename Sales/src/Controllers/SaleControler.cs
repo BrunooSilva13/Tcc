@@ -1,31 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Sales;
+using MySql.Data.MySqlClient;
+// Adicione outros namespaces necessários conforme apropriado
+
+
+
+
 
 [ApiController]
 [Route("api/[controller]")]
 public class SalesController : ControllerBase
 {
-    private readonly ISaleRepository _saleRepository;
+    private readonly ISaleService _saleService;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public SalesController(ISaleRepository saleRepository, IHttpClientFactory httpClientFactory)
+    public SalesController(ISaleService saleService, IHttpClientFactory httpClientFactory)
     {
-        _saleRepository = saleRepository;
+        _saleService = saleService;
         _httpClientFactory = httpClientFactory;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Sale>>> GetSales()
     {
-        return Ok(await _saleRepository.GetAllSales());
+        var sales = await _saleService.GetAllSalesAsync();
+        return Ok(sales);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Sale>> GetSale(int id)
     {
-        var sale = await _saleRepository.GetSaleById(id);
+        var sale = await _saleService.GetSaleByIdAsync(id);
         if (sale == null)
         {
             return NotFound();
@@ -34,7 +40,7 @@ public class SalesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Sales>> PostSales(Sales sales)
+    public async Task<ActionResult<Sale>> PostSale(Sale sale)
     {
         var client = _httpClientFactory.CreateClient();
 
@@ -62,25 +68,25 @@ public class SalesController : ControllerBase
         // Simulação de cálculo do preço total
         sale.TotalPrice = sale.Quantity * 100; // Exemplo de cálculo
 
-        await _saleRepository.AddSale(sale);
-        return CreatedAtAction(nameof(GetSale), new { id = sale.Id }, sale);
+        await _saleService.AddSaleAsync(sale);
+        return CreatedAtAction(nameof(GetSale), new { id = sale.SaleId }, sale);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutSale(int id, Sale sale)
     {
-        if (id != sale.Id)
+        if (id != sale.SaleId)
         {
             return BadRequest();
         }
-        await _saleRepository.UpdateSale(sale);
+        await _saleService.UpdateSaleAsync(sale);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSale(int id)
     {
-        await _saleRepository.DeleteSale(id);
+        await _saleService.DeleteSaleAsync(id);
         return NoContent();
     }
 }

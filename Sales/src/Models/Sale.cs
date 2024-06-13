@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+
+// Sale.cs
 public class Sale
 {
     public int SaleId { get; set; }
@@ -14,3 +16,5 @@ public class Sale
         Items = new List<SaleItem>();
     }
 }
+
+
